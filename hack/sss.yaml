@@ -1,0 +1,26 @@
+apiVersion: template.openshift.io/v1
+kind: Template
+parameters:
+- name: RVMO_IMAGE_TAG
+  required: true
+- name: RVMO_IMAGE_NAME
+  value: quay.io/app-sre/managed-openshift-release-bundle
+metadata:
+  name: selectorsyncset-template
+objects:
+- apiVersion: hive.openshift.io/v1
+  kind: SelectorSyncSet
+  metadata:
+    name: rvmo-sss
+  spec:
+    clusterDeploymentSelector:
+      matchLabels:
+        api.openshift.com/managed: 'true'
+    resourceApplyMode: Sync
+    resources:
+    - apiVersion: package-operator.run/v1alpha1
+      kind: ClusterPackage
+      metadata:
+        name: managed-openshift-release-bundle
+      spec:
+        image: ${RVMO_IMAGE_NAME}@${RVMO_IMAGE_TAG}
