@@ -7,10 +7,12 @@ function log() {
 }
 
 # assert required vars are being passed through
-echo "${OPERATOR_VERSION}"
 
 # default path to olm-artifacts-template.yaml file
 _TEMPLATE_FILE=../hack/olm-registry/olm-artifacts-template.yaml
+
+_OUTDIR=resources/${OPERATOR_NAME}
+rm -rf "${_OUTDIR}" && mkdir -p "${_OUTDIR}"
 
 # TODO: determine this
 _OPERATOR_OLM_CHANNEL=staging
@@ -34,8 +36,27 @@ _PROCESSED_TEMPLATE=$(oc process \
 	REGISTRY_IMG="${OPERATOR_OLM_REGISTRY_IMAGE}" \
 	IMAGE_DIGEST="${_OPERATOR_OLM_REGISTRY_IMAGE_DIGEST}")
 
-echo "${_PROCESSED_TEMPLATE}"
-
 log "Appending 'package-operator.run/phase' to every object and writing to ${_OUTDIR} ..."
+yq "
+    .items[0].spec.resources[] |
+    select(.kind==\"Namespace\") |
+    .metadata.annotations += {\"package-operator.run/phase\": \"namespaces\"}" <<<"${_PROCESSED_TEMPLATE}" >"${_OUTDIR}"/namespace.yaml
+yq "
+    .items[0].spec.resources[] |
+    select(.kind!=\"Namespace\") |
+    .metadata.annotations += {\"package-operator.run/phase\":\"${OPERATOR_NAME}\"} |
+    split_doc" <<<"${_PROCESSED_TEMPLATE}" >"${_OUTDIR}"/resources.yaml
+
+# add new operator phase if it doesn't exist
+if ! grep -q "${OPERATOR_NAME}" resources/manifest.yaml; then
+	yq -i ".spec.phases += {\"name\": \"${OPERATOR_NAME}\"}" resources/manifest.yaml
+fi
+
+git add "${_OUTDIR}" resources/manifest.yaml
+
+if git diff --quiet --exit-code --cached; then
+	log "No changes" && exit 1
+fi
 
 log "Committing changes..."
+git commit --quiet --message "${OPERATOR_NAME}: ${OPERATOR_VERSION}"
