@@ -6,4 +6,5 @@ spec:
   scopes:
     - Namespaced
     - Cluster
-  phases: []
+  phases:
+    - name: route-monitor-operator

@@ -1,0 +1,48 @@
+apiVersion: operators.coreos.com/v1alpha1
+kind: CatalogSource
+metadata:
+  labels:
+    opsrc-datastore: "true"
+    opsrc-provider: redhat
+  name: route-monitor-operator-registry
+  namespace: openshift-route-monitor-operator
+  annotations:
+    package-operator.run/phase: route-monitor-operator
+spec:
+  displayName: route-monitor-operator
+  grpcPodConfig:
+    nodeSelector:
+      node-role.kubernetes.io: infra
+    securityContextConfig: restricted
+    tolerations:
+      - effect: NoSchedule
+        key: node-role.kubernetes.io/infra
+        operator: Exists
+  icon:
+    base64data: ""
+    mediatype: ""
+  image: quay.io/app-sre/route-monitor-operator-registry@sha256:1f73c2b902d55da3f1a4bceef8c849653ef189c2cd52302c1d6ea2f7641839e5
+  publisher: Red Hat
+  sourceType: grpc
+---
+apiVersion: operators.coreos.com/v1alpha1
+kind: Subscription
+metadata:
+  name: route-monitor-operator
+  namespace: openshift-route-monitor-operator
+  annotations:
+    package-operator.run/phase: route-monitor-operator
+spec:
+  channel: staging
+  name: route-monitor-operator
+  source: route-monitor-operator-registry
+  sourceNamespace: openshift-route-monitor-operator
+---
+apiVersion: operators.coreos.com/v1alpha2
+kind: OperatorGroup
+metadata:
+  annotations:
+    olm.operatorframework.io/exclude-global-namespace-resolution: "true"
+    package-operator.run/phase: route-monitor-operator
+  name: route-monitor-operator
+  namespace: openshift-route-monitor-operator
