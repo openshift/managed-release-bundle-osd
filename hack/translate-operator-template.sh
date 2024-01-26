@@ -3,11 +3,25 @@
 set -e
 
 function log() {
-	echo "[bundle] ${1}"
+	echo "[rvmo-bundle] ${1}"
 }
+
+for var in TEMPLATE_FILE \
+	OPERATOR_NAME \
+	OPERATOR_VERSION \
+	OPERATOR_OLM_REGISTRY_IMAGE; do
+	if [ ! "${!var:-}" ]; then
+		log "$var is not set"
+		exit 1
+	fi
+done
 
 # TODO: assert required vars are being passed through
 # $OPERATOR_NAME $OPERATOR_VERSION $OPERATOR_OLM_REGISTRY_IMAGE
+if ! [ -f "${TEMPLATE_FILE}" ]; then
+	log "template file \"${TEMPLATE_FILE}\" does not exist"
+	exit 1
+fi
 
 # Use set container engine or select one from available binaries
 if [[ -z "$CONTAINER_ENGINE" ]]; then
@@ -42,8 +56,6 @@ if ! command -v ${KUBECTL_PACKAGE} &>/dev/null; then
 		-sL https://github.com/package-operator/package-operator/releases/download/${_KUBECTL_PACAKGE_VERSION}/kubectl-package_linux_amd64
 fi
 
-# default path to olm-artifacts-template.yaml file
-_TEMPLATE_FILE=../hack/olm-registry/olm-artifacts-template.yaml
 _BUNDLE_REGISTRY=ghcr.io/jbpratt/managed-openshift/release-bundle
 
 _OUTDIR=resources/${OPERATOR_NAME}
@@ -59,13 +71,13 @@ _OPERATOR_OLM_REGISTRY_IMAGE_DIGEST=$(${SKOPEO} inspect \
 	docker://"${OPERATOR_OLM_REGISTRY_IMAGE}":"${_OPERATOR_OLM_REGISTRY_IMAGE_TAG}" |
 	tr -d "\r")
 
-log "Process template with parameters..."
+log "Processing template with parameters..."
 _PROCESSED_TEMPLATE=$(${OC} process \
 	--local \
 	--output=yaml \
 	--ignore-unknown-parameters \
 	--filename \
-	"${_TEMPLATE_FILE}" \
+	"${TEMPLATE_FILE}" \
 	CHANNEL="${_OPERATOR_OLM_CHANNEL}" \
 	IMAGE_TAG="${_OPERATOR_OLM_REGISTRY_IMAGE_TAG}" \
 	REGISTRY_IMG="${OPERATOR_OLM_REGISTRY_IMAGE}" \
