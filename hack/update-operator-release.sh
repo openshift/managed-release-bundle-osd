@@ -16,8 +16,6 @@ for var in TEMPLATE_FILE \
 	fi
 done
 
-# TODO: assert required vars are being passed through
-# $OPERATOR_NAME $OPERATOR_VERSION $OPERATOR_OLM_REGISTRY_IMAGE
 if ! [ -f "${TEMPLATE_FILE}" ]; then
 	log "template file \"${TEMPLATE_FILE}\" does not exist"
 	exit 1
@@ -56,7 +54,7 @@ if ! command -v ${KUBECTL_PACKAGE} &>/dev/null; then
 		-sL https://github.com/package-operator/package-operator/releases/download/${_KUBECTL_PACAKGE_VERSION}/kubectl-package_linux_amd64
 fi
 
-_BUNDLE_REGISTRY=ghcr.io/jbpratt/managed-openshift/release-bundle
+_BUNDLE_REGISTRY="${BUNDLE_REGISTRY:-quay.io/app-sre/managed-release-bundle}"
 
 _OUTDIR=resources/${OPERATOR_NAME}
 rm -rf "${_OUTDIR}" && mkdir -p "${_OUTDIR}"
