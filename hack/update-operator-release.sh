@@ -110,4 +110,4 @@ _BUILD_NUMBER=$(git rev-list --count HEAD)
 _BUNDLE_IMAGE_NAME=${_BUNDLE_REGISTRY}:${_BRANCH/#release-/}.${_BUILD_NUMBER}-${_COMMIT}
 
 log "Building and pushing package ${_BUNDLE_IMAGE_NAME} ..."
-echo ${KUBECTL_PACKAGE} build --push --tag "${_BUNDLE_IMAGE_NAME}" ./resources
+${KUBECTL_PACKAGE} build --push --tag "${_BUNDLE_IMAGE_NAME}" ./resources
