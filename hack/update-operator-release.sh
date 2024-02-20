@@ -98,7 +98,9 @@ ${YQ} ".items[0].spec.resources[] |
 # add new operator phase if it doesn't exist
 if ! grep -q "${OPERATOR_NAME}" resources/manifest.yaml; then
 	_CONTENTS=$(<resources/manifest.yaml)
-	${YQ} ".spec.phases += {\"name\": \"${OPERATOR_NAME}\"}" <<<"${_CONTENTS}" >resources/manifest.yaml
+	${YQ} ".spec.phases += {\"name\": \"${OPERATOR_NAME}\"}" - <<<"${_CONTENTS}" >resources/manifest.yaml
+
+	cat resources/manifest.yaml
 fi
 
 git add "${_OUTDIR}" resources/manifest.yaml
