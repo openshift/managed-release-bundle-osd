@@ -40,7 +40,7 @@ YQ=yq
 if ! command -v ${YQ} &>/dev/null; then
 	_YQ_IMAGE="quay.io/app-sre/yq:4"
 	${CONTAINER_ENGINE} pull "${_YQ_IMAGE}"
-	YQ="${CONTAINER_ENGINE} run --rm ${_YQ_IMAGE}"
+	YQ="${CONTAINER_ENGINE} run --rm -i ${_YQ_IMAGE}"
 fi
 
 # TODO: fix forcing skopeo from a container on jenkins
@@ -98,7 +98,7 @@ ${YQ} ".items[0].spec.resources[] |
 # add new operator phase if it doesn't exist
 if ! grep -q "${OPERATOR_NAME}" resources/manifest.yaml; then
 	_CONTENTS=$(${YQ} ".spec.phases += {\"name\": \"${OPERATOR_NAME}\"}" - < resources/manifest.yaml)
-	cat <<< "${_CONTENTS}" > resources/manifest.yaml
+	echo "${_CONTENTS}" >> resources/manifest.yaml
 fi
 
 git add "${_OUTDIR}" resources/manifest.yaml
