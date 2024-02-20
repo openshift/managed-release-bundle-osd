@@ -6,19 +6,21 @@ function log() {
 	echo "[rvmo-bundle] ${1}"
 }
 
+function fatal() {
+	log "${1}" && exit 1
+}
+
 for var in TEMPLATE_FILE \
 	OPERATOR_NAME \
 	OPERATOR_VERSION \
 	OPERATOR_OLM_REGISTRY_IMAGE; do
 	if [ ! "${!var:-}" ]; then
-		log "$var is not set"
-		exit 1
+		fatal "$var is not set"
 	fi
 done
 
 if ! [ -f "${TEMPLATE_FILE}" ]; then
-	log "template file \"${TEMPLATE_FILE}\" does not exist"
-	exit 1
+	fatal "template file \"${TEMPLATE_FILE}\" does not exist"
 fi
 
 # Use set container engine or select one from available binaries
@@ -29,8 +31,7 @@ fi
 # TODO: install oc when missing
 OC=oc
 if ! command -v ${OC} &>/dev/null; then
-	log "'oc' is required"
-	exit 1
+	fatal "'oc' is required"
 fi
 
 YQ=yq
@@ -97,7 +98,7 @@ fi
 
 git add "${_OUTDIR}" resources/manifest.yaml
 if git diff --quiet --exit-code --cached; then
-	log "No changes" && exit 1
+	fatal "No changes"
 fi
 
 log "Committing changes..."
