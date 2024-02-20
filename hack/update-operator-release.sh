@@ -59,8 +59,9 @@ rm -rf "${_OUTDIR}" && mkdir -p "${_OUTDIR}"
 _OPERATOR_OLM_CHANNEL=staging
 _OPERATOR_OLM_REGISTRY_IMAGE_TAG="${_OPERATOR_OLM_CHANNEL}-latest"
 
-# look up the digest for the new registry image
-_OPERATOR_OLM_REGISTRY_IMAGE_DIGEST=$(${CONTAINER_ENGINE} inspect \
+# pull and look up the digest for the new registry image
+${CONTAINER_ENGINE} pull "${OPERATOR_OLM_REGISTRY_IMAGE}":"${_OPERATOR_OLM_REGISTRY_IMAGE_TAG}"
+_OPERATOR_OLM_REGISTRY_IMAGE_DIGEST=$(${CONTAINER_ENGINE} image inspect \
 	--format '{{.Digest}}' \
 	"${OPERATOR_OLM_REGISTRY_IMAGE}":"${_OPERATOR_OLM_REGISTRY_IMAGE_TAG}" |
 	tr -d "\r")
