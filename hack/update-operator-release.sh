@@ -65,8 +65,7 @@ _OPERATOR_OLM_CHANNEL=staging
 _OPERATOR_OLM_REGISTRY_IMAGE_TAG="${_OPERATOR_OLM_CHANNEL}-latest"
 
 # look up the digest for the new registry image
-_OPERATOR_OLM_REGISTRY_IMAGE_DIGEST=$(${SKOPEO} inspect \
-	--format '{{.Digest}}' \
+_OPERATOR_OLM_REGISTRY_IMAGE_DIGEST=$(${SKOPEO} inspect --format '{{.Digest}}' \
 	docker://"${OPERATOR_OLM_REGISTRY_IMAGE}":"${_OPERATOR_OLM_REGISTRY_IMAGE_TAG}" |
 	tr -d "\r")
 
