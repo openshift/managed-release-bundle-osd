@@ -43,6 +43,14 @@ if ! command -v ${YQ} &>/dev/null; then
 	YQ="${CONTAINER_ENGINE} run --rm ${_YQ_IMAGE}"
 fi
 
+# TODO: fix forcing skopeo from a container on jenkins
+SKOPEO=skopeo
+if ! command -v ${SKOPEO} &>/dev/null || [ -n "${JENKINS_URL}" ]; then
+	_SKOPEO_IMAGE="quay.io/skopeo/stable:latest"
+	${CONTAINER_ENGINE} pull "${_SKOPEO_IMAGE}"
+	SKOPEO="${CONTAINER_ENGINE} run --rm -i ${_SKOPEO_IMAGE}"
+fi
+
 _KUBECTL_PACAKGE_VERSION=v1.9.3
 KUBECTL_PACKAGE=kubectl-package
 if ! command -v ${KUBECTL_PACKAGE} &>/dev/null; then
@@ -59,11 +67,9 @@ rm -rf "${_OUTDIR}" && mkdir -p "${_OUTDIR}"
 _OPERATOR_OLM_CHANNEL=staging
 _OPERATOR_OLM_REGISTRY_IMAGE_TAG="${_OPERATOR_OLM_CHANNEL}-latest"
 
-# pull and look up the digest for the new registry image
-${CONTAINER_ENGINE} pull "${OPERATOR_OLM_REGISTRY_IMAGE}":"${_OPERATOR_OLM_REGISTRY_IMAGE_TAG}"
-_OPERATOR_OLM_REGISTRY_IMAGE_DIGEST=$(${CONTAINER_ENGINE} image inspect \
-	--format '{{.Digest}}' \
-	"${OPERATOR_OLM_REGISTRY_IMAGE}":"${_OPERATOR_OLM_REGISTRY_IMAGE_TAG}" |
+# look up the digest for the new registry image
+_OPERATOR_OLM_REGISTRY_IMAGE_DIGEST=$(${SKOPEO} inspect --format '{{.Digest}}' \
+	docker://"${OPERATOR_OLM_REGISTRY_IMAGE}":"${_OPERATOR_OLM_REGISTRY_IMAGE_TAG}" |
 	tr -d "\r")
 
 log "Processing template with parameters..."
