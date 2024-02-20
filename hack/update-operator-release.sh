@@ -56,6 +56,8 @@ KUBECTL_PACKAGE=kubectl-package
 if ! command -v ${KUBECTL_PACKAGE} &>/dev/null; then
 	curl -o kubectl-package \
 		-sL https://github.com/package-operator/package-operator/releases/download/${_KUBECTL_PACAKGE_VERSION}/kubectl-package_linux_amd64
+	chmod +x ./kubectl-package
+	KUBECTL_PACKAGE=./kubectl-package
 fi
 
 _BUNDLE_REGISTRY="${BUNDLE_REGISTRY:-quay.io/app-sre/managed-release-bundle}"
