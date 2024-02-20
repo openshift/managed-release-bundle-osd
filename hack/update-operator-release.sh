@@ -2,6 +2,8 @@
 
 set -e
 
+set -x
+
 function log() {
 	echo "[rvmo-bundle] ${1}"
 }
