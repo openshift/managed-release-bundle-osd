@@ -40,7 +40,7 @@ YQ=yq
 if ! command -v ${YQ} &>/dev/null; then
 	_YQ_IMAGE="quay.io/app-sre/yq:4"
 	${CONTAINER_ENGINE} pull "${_YQ_IMAGE}"
-	YQ="${CONTAINER_ENGINE} run --rm -i ${_YQ_IMAGE}"
+	YQ="${CONTAINER_ENGINE} run --rm ${_YQ_IMAGE}"
 fi
 
 _KUBECTL_PACAKGE_VERSION=v1.9.3
@@ -88,11 +88,9 @@ ${YQ} ".items[0].spec.resources[] |
 
 # add new operator phase if it doesn't exist
 if ! grep -q "${OPERATOR_NAME}" resources/manifest.yaml; then
-	${YQ} -i ".spec.phases += {\"name\": \"${OPERATOR_NAME}\"}" resources/manifest.yaml
+	_CONTENTS=$(${YQ} ".spec.phases += {\"name\": \"${OPERATOR_NAME}\"}" - < resources/manifest.yaml)
+	cat <<< "${_CONTENTS}" > resources/manifest.yaml
 fi
-
-# TODO: debugging
-pwd
 
 git add "${_OUTDIR}" resources/manifest.yaml
 if git diff --quiet --exit-code --cached; then
