@@ -95,6 +95,9 @@ if ! grep -q "${OPERATOR_NAME}" resources/manifest.yaml; then
 	${YQ} -i ".spec.phases += {\"name\": \"${OPERATOR_NAME}\"}" resources/manifest.yaml
 fi
 
+# TODO: debugging
+pwd
+
 git add "${_OUTDIR}" resources/manifest.yaml
 if git diff --quiet --exit-code --cached; then
 	fatal "No changes"
