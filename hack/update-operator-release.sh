@@ -24,11 +24,16 @@ if ! [ -f "${TEMPLATE_FILE}" ]; then
 fi
 
 # Use set container engine or select one from available binaries
-if [[ -z "$CONTAINER_ENGINE" ]]; then
+if [[ -z "${CONTAINER_ENGINE}" ]]; then
 	CONTAINER_ENGINE=$(command -v podman || command -v docker || true)
 fi
 
+if [[ -z "${QUAY_DOCKER_CONFIG_JSON}" ]]; then
+	export DOCKER_CONFIG="${QUAY_DOCKER_CONFIG_JSON}"
+fi
+
 # TODO: install oc when missing
+# quay.io/openshift/origin-cli:4.12
 OC=oc
 if ! command -v ${OC} &>/dev/null; then
 	fatal "'oc' is required"
