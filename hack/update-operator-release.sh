@@ -28,15 +28,10 @@ if [[ -z "${CONTAINER_ENGINE}" ]]; then
 	CONTAINER_ENGINE=$(command -v podman || command -v docker || true)
 fi
 
-if [[ -z "${QUAY_DOCKER_CONFIG_JSON}" ]]; then
-	export DOCKER_CONFIG="${QUAY_DOCKER_CONFIG_JSON}"
-fi
-
-# TODO: install oc when missing
-# quay.io/openshift/origin-cli:4.12
-OC=oc
-if ! command -v ${OC} &>/dev/null; then
-	fatal "'oc' is required"
+if [[ ${QUAY_DOCKER_CONFIG_JSON} ]]; then
+	mkdir -p .docker
+	echo "$QUAY_DOCKER_CONFIG_JSON" | base64 -d > .docker/config.json
+	export DOCKER_CONFIG=.docker
 fi
 
 YQ=yq
@@ -54,7 +49,7 @@ if ! command -v ${SKOPEO} &>/dev/null || [ -n "${JENKINS_URL}" ]; then
 	SKOPEO="${CONTAINER_ENGINE} run --rm -i ${_SKOPEO_IMAGE}"
 fi
 
-_KUBECTL_PACAKGE_VERSION=v1.9.3
+_KUBECTL_PACAKGE_VERSION=v1.10.0
 KUBECTL_PACKAGE=kubectl-package
 if ! command -v ${KUBECTL_PACKAGE} &>/dev/null; then
 	curl -o kubectl-package \
@@ -78,25 +73,12 @@ _OPERATOR_OLM_REGISTRY_IMAGE_DIGEST=$(${SKOPEO} inspect --format '{{.Digest}}' \
 	tr -d "\r")
 
 log "Processing template with parameters..."
-_PROCESSED_TEMPLATE=$(${OC} process \
-	--local \
-	--output=yaml \
-	--ignore-unknown-parameters \
-	--filename \
-	"${TEMPLATE_FILE}" \
-	CHANNEL="${_OPERATOR_OLM_CHANNEL}" \
-	IMAGE_TAG="${_OPERATOR_OLM_REGISTRY_IMAGE_TAG}" \
-	REGISTRY_IMG="${OPERATOR_OLM_REGISTRY_IMAGE}" \
-	IMAGE_DIGEST="${_OPERATOR_OLM_REGISTRY_IMAGE_DIGEST}")
-
-log "Appending 'package-operator.run/phase' to every object and writing to ${_OUTDIR} ..."
-${YQ} ".items[0].spec.resources[] |
-     select(.kind==\"Namespace\") |
-     .metadata.annotations += {\"package-operator.run/phase\": \"namespaces\"}" <<<"${_PROCESSED_TEMPLATE}" >"${_OUTDIR}"/namespace.yaml
-${YQ} ".items[0].spec.resources[] |
-     select(.kind!=\"Namespace\") |
-     .metadata.annotations += {\"package-operator.run/phase\":\"${OPERATOR_NAME}\"} |
-     split_doc" <<<"${_PROCESSED_TEMPLATE}" >"${_OUTDIR}"/resources.yaml
+sed -i "s#\${NAMESPACE}#${OPERATOR_NAME}#" "${TEMPLATE_FILE}"
+sed -i "s#\${REPO_NAME}#${OPERATOR_NAME}#" "${TEMPLATE_FILE}"
+sed -i "s#\${REGISTRY_IMG}#${OPERATOR_OLM_REGISTRY_IMAGE}#" "${TEMPLATE_FILE}"
+sed -i "s#\${IMAGE_DIGEST}#${_OPERATOR_OLM_REGISTRY_IMAGE_DIGEST}#" "${TEMPLATE_FILE}"
+sed -i "s#\${CHANNEL}#${_OPERATOR_OLM_CHANNEL}#" "${TEMPLATE_FILE}"
+cp "${TEMPLATE_FILE}" "${_OUTDIR}/resources.yaml"
 
 # add new operator phase if it doesn't exist
 if ! grep -q "${OPERATOR_NAME}" resources/manifest.yaml; then
