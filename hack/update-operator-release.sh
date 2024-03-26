@@ -61,6 +61,7 @@ if [[ ${JENKINS_URL} ]]; then
 	git config --local user.name "${github_username}"
 	git config --local user.email "${github_email}"
 
+	# force override appinterface pipeline settings
 	GIT_AUTHOR_NAME="${github_username}"
 	GIT_AUTHOR_EMAIL="${github_email}"
 	GIT_COMMITTER_NAME="${github_username}"
