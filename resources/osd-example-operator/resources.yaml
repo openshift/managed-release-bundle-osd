@@ -1,3 +1,4 @@
+# DO NOT EDIT
 # NAMESPACE, REPO_NAME, REGISTRY_IMG, IMAGE_DIGEST, CHANNEL
 {{ if eq .api.openshift.com_name "osd-example-1" }}
 apiVersion: v1
@@ -36,7 +37,7 @@ spec:
   icon:
     base64data: ''
     mediatype: ''
-  image: quay.io/app-sre/osd-example-operator-registry@sha256:21cb54c65d24ece5867a30e846287af4664f5f105759a25c89802ed333e16f76
+  image: quay.io/app-sre/osd-example-operator-registry@sha256:f473bdc2c40a58816c6c6f2d63c68de126c1edb6cd7edfcd794e4a58f2fffa6d
   publisher: Red Hat
   sourceType: grpc
   grpcPodConfig:
