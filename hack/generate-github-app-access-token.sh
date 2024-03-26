@@ -1,9 +1,7 @@
 #!/bin/bash
 set -eo pipefail
 
-app_id="${GITHUB_APP_ID}"
-private_key_file_path="${GITHUB_APP_PRIVATE_KEY_FILE_PATH}"
-private_key=$(cat $private_key_file_path)
+private_key="${OPENSHIFT_SD_BUILD_BOT_GITHUB_APP_PRIVATE_KEY}"
 
 # Shared content to use as template
 header='{
@@ -12,10 +10,14 @@ header='{
 }'
 payload_template='{}'
 
+function get_app_id() {
+	echo "${OPENSHIFT_SD_BUILD_BOT_GITHUB_APP_ID}"
+}
+
 function build_payload() {
 	jq -c \
 		--arg iat_str "$(date +%s)" \
-		--arg app_id "${app_id}" \
+		--arg app_id "$(get_app_id)" \
 		'
         ($iat_str | tonumber) as $iat
         | .iat = $iat
@@ -45,7 +47,7 @@ function generate_app_access_token() {
 		-H "Accept: application/vnd.github.machine-man-preview+json" \
 		https://api.github.com/app/installations)
 
-	installation_id=$(echo $installation_list_response | jq '.[] | select(.app_id=='${app_id}')' | jq -r '.id')
+	installation_id=$(echo $installation_list_response | jq '.[] | select(.app_id=='$(get_app_id)')' | jq -r '.id')
 
 	if [ -z "$installation_id" ]; then
 		echo >&2 "Unable to obtain installation ID: $installation_list_response"
