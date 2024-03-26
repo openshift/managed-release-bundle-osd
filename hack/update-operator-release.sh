@@ -54,13 +54,17 @@ if [[ ${JENKINS_URL} ]]; then
 	github_token=$(generate_app_access_token)
 	github_app_id=$(get_app_id)
 	github_username="openshift-sd-build-bot"
-	log "Logged in with ${github_username}"
 
 	github_email="${github_app_id}+${github_username}[bot]@users.noreply.github.com"
 	github_origin=$(git config remote.origin.url | sed "s/github.com/${github_username}:${github_token}@github.com/g")
 	git remote set-url origin "${github_origin}"
-	git config user.name "${github_username}"
-	git config user.email "${github_email}"
+	git config --local user.name "${github_username}"
+	git config --local user.email "${github_email}"
+
+	GIT_AUTHOR_NAME="${github_username}"
+	GIT_AUTHOR_EMAIL="${github_email}"
+	GIT_COMMITTER_NAME="${github_username}"
+	GIT_COMMITTER_EMAIL="${github_email}"
 fi
 
 _OUTDIR=resources/${OPERATOR_NAME}
