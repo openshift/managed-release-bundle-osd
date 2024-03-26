@@ -34,6 +34,19 @@ if [[ ${QUAY_DOCKER_CONFIG_JSON} ]]; then
 	export DOCKER_CONFIG=.docker
 fi
 
+if [[ ${JENKINS_URL} ]]; then
+	source "$(dirname "${BASH_SOURCE[0]}")/generate-github-app-access-token.sh"
+	github_token=$(generate_app_access_token)
+	github_username="openshift-sd-build-bot"
+	github_app_id="${GITHUB_APP_ID}"
+
+	github_email="${github_app_id}+${github_username}[bot]@users.noreply.github.com"
+	github_origin=$(git config remote.origin.url | sed "s/github.com/${github_username}:${github_token}@github.com/g")
+	git remote set-url origin "${github_origin}"
+	git config --local user.name "${github_username}"
+	git config --local user.email "${github_email}"
+fi
+
 YQ=yq
 if ! command -v ${YQ} &>/dev/null; then
 	_YQ_IMAGE="quay.io/app-sre/yq:4"
