@@ -37,8 +37,8 @@ fi
 if [[ ${JENKINS_URL} ]]; then
 	source "$(dirname "${BASH_SOURCE[0]}")/generate-github-app-access-token.sh"
 	github_token=$(generate_app_access_token)
+	github_app_id=$(get_app_id)
 	github_username="openshift-sd-build-bot"
-	github_app_id="${GITHUB_APP_ID}"
 
 	github_email="${github_app_id}+${github_username}[bot]@users.noreply.github.com"
 	github_origin=$(git config remote.origin.url | sed "s/github.com/${github_username}:${github_token}@github.com/g")
