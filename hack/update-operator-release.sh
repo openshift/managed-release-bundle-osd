@@ -7,7 +7,7 @@ function log() {
 }
 
 function fatal() {
-	log "fatal: ${1}" && exit 1
+	log "${1}" && exit 1
 }
 
 for var in TEMPLATE_FILE \
@@ -92,10 +92,6 @@ if ! grep -q "${OPERATOR_NAME}" resources/manifest.yaml; then
 	_CONTENTS=$(${YQ} ".spec.phases += {\"name\": \"${OPERATOR_NAME}\"}" - < resources/manifest.yaml)
 	echo "${_CONTENTS}" >> resources/manifest.yaml
 fi
-
-git config --list
-
-exit 1
 
 git add "${_OUTDIR}" resources/manifest.yaml
 if git diff --quiet --exit-code --cached; then
