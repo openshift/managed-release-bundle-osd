@@ -28,12 +28,6 @@ if [[ -z "${CONTAINER_ENGINE}" ]]; then
 	CONTAINER_ENGINE=$(command -v podman || command -v docker || true)
 fi
 
-if [[ ${QUAY_DOCKER_CONFIG_JSON} ]]; then
-	mkdir -p .docker
-	echo "$QUAY_DOCKER_CONFIG_JSON" | base64 -d > .docker/config.json
-	export DOCKER_CONFIG=.docker
-fi
-
 YQ=yq
 if ! command -v ${YQ} &>/dev/null; then
 	_YQ_IMAGE="quay.io/app-sre/yq:4"
