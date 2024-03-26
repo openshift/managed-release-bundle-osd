@@ -7,7 +7,7 @@ function log() {
 }
 
 function fatal() {
-	log "${1}" && exit 1
+	log "fatal: ${1}" && exit 1
 }
 
 for var in TEMPLATE_FILE \
