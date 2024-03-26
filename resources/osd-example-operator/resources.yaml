@@ -36,7 +36,7 @@ spec:
   icon:
     base64data: ''
     mediatype: ''
-  image: quay.io/app-sre/osd-example-operator-registry@sha256:f5176ada82840016deef3f794f771148897de8a35bc1a83ebef7913196ebc77f
+  image: quay.io/app-sre/osd-example-operator-registry@sha256:21cb54c65d24ece5867a30e846287af4664f5f105759a25c89802ed333e16f76
   publisher: Red Hat
   sourceType: grpc
   grpcPodConfig:
