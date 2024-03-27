@@ -1,9 +1,9 @@
 apiVersion: template.openshift.io/v1
 kind: Template
 parameters:
-- name: RVMO_IMAGE_TAG
+- name: IMAGE_TAG
   required: true
-- name: RVMO_IMAGE_NAME
+- name: IMAGE_NAME
   value: quay.io/app-sre/managed-release-bundle
 metadata:
   name: selectorsyncset-template
@@ -23,4 +23,4 @@ objects:
       metadata:
         name: managed-openshift-release-bundle
       spec:
-        image: ${RVMO_IMAGE_NAME}@${RVMO_IMAGE_TAG}
+        image: ${IMAGE_NAME}@${IMAGE_TAG}
