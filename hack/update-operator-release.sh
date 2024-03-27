@@ -52,9 +52,8 @@ if [[ ${JENKINS_URL} ]]; then
 	github_email="${github_app_id}+${github_username}[bot]@users.noreply.github.com"
 	github_origin=$(git config remote.origin.url | sed "s/github.com/${github_username}:${github_token}@github.com/g")
 	git remote set-url origin "${github_origin}"
-	git config --local user.name "${github_username}[bot]"
-	git config --local user.email "${github_email}"
 
+	# TODO: why isn't this showing up as the app on github?
 	# force override appinterface pipeline settings
 	GIT_AUTHOR_NAME="${github_username}[bot]"
 	GIT_AUTHOR_EMAIL="${github_email}"
