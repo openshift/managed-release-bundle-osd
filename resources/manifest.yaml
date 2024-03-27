@@ -6,14 +6,5 @@ spec:
   scopes:
     - Namespaced
     - Cluster
-  phases: []
-apiVersion: manifests.package-operator.run/v1alpha1
-kind: PackageManifest
-metadata:
-  name: managed-openshift-release-bundle
-spec:
-  scopes:
-    - Namespaced
-    - Cluster
   phases:
     - name: osd-example-operator
