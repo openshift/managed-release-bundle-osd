@@ -4,7 +4,7 @@ parameters:
 - name: RVMO_IMAGE_TAG
   required: true
 - name: RVMO_IMAGE_NAME
-  value: quay.io/app-sre/managed-openshift-release-bundle
+  value: quay.io/app-sre/managed-release-bundle
 metadata:
   name: selectorsyncset-template
 objects:
