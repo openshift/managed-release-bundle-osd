@@ -11,8 +11,10 @@ if ! command -v ${KUBECTL_PACKAGE} &>/dev/null; then
 	KUBECTL_PACKAGE=./kubectl-package
 fi
 
-if [[ ${QUAY_DOCKER_CONFIG_JSON} ]] && [[ -f .docker ]]; then
-	DOCKER_CONFIG=.docker
+if [[ ${QUAY_DOCKER_CONFIG_JSON} ]]; then
+	mkdir -p .docker
+	echo "$QUAY_DOCKER_CONFIG_JSON" | base64 -d > .docker/config.json
+	export DOCKER_CONFIG=.docker
 fi
 
 _BUNDLE_REGISTRY="${BUNDLE_REGISTRY:-quay.io/app-sre/managed-release-bundle}"
