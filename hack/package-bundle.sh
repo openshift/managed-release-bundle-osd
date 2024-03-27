@@ -19,7 +19,7 @@ fi
 
 _BUNDLE_REGISTRY="${BUNDLE_REGISTRY:-quay.io/app-sre/managed-release-bundle}"
 
-_BRANCH=$(git rev-parse --abbrev-ref HEAD)
+_BRANCH=$(git branch --remote --contains HEAD | cut -d / -f 2)
 _COMMIT=$(git rev-parse --short HEAD)
 _BUILD_NUMBER=$(git rev-list --count HEAD)
 _BUNDLE_IMAGE_NAME=${_BUNDLE_REGISTRY}:${_BRANCH/#release-/}.${_BUILD_NUMBER}-${_COMMIT}
