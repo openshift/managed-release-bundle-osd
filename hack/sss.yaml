@@ -19,8 +19,24 @@ objects:
     resourceApplyMode: Sync
     resources:
     - apiVersion: package-operator.run/v1alpha1
-      kind: ClusterPackage
+      kind: ClusterObjectTemplate
       metadata:
-        name: managed-openshift-release-bundle
+        name: managed-openshift-release-bundle-template
       spec:
-        image: ${IMAGE_NAME}@${IMAGE_TAG}
+        sources:
+        - apiVersion: v1
+          items:
+          - destination: .
+            key: .data
+          kind: ConfigMap
+          name: osd-cluster-metadata
+          namespace: openshift-config
+          optional: true
+        template: |
+          apiVersion: package-operator.run/v1alpha1
+          kind: ClusterPackage
+          metadata:
+            name: managed-openshift-release-bundle
+          spec:
+            image: ${IMAGE_NAME}@${IMAGE_TAG}
+            config: {{toJson .config}}
