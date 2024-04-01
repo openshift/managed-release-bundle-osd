@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: release-bundle
+  namespace: openshift-config
+data:
+  installed: true
