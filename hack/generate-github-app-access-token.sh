@@ -1,5 +1,5 @@
 #!/bin/bash
-set -eo pipefail
+set -ueo pipefail
 
 private_key="${OPENSHIFT_SD_BUILD_BOT_GITHUB_APP_PRIVATE_KEY}"
 
@@ -31,9 +31,7 @@ function json() { jq -c . | LC_CTYPE=C tr -d '\n'; }
 function rs256_sign() { openssl dgst -binary -sha256 -sign <(printf '%s\n' "$1"); }
 
 function sign() {
-	local algo payload sig
-	algo=${1:-RS256}
-	algo=${algo^^}
+	local payload sig
 	payload=$(build_payload) || return
 	signed_content="$(json <<<"$header" | b64enc).$(json <<<"$payload" | b64enc)"
 	sig=$(printf %s "$signed_content" | rs256_sign "$private_key" | b64enc)
@@ -47,10 +45,10 @@ function generate_app_access_token() {
 		-H "Accept: application/vnd.github.machine-man-preview+json" \
 		https://api.github.com/app/installations)
 
-	installation_id=$(echo $installation_list_response | jq '.[] | select(.app_id=='$(get_app_id)')' | jq -r '.id')
+	installation_id=$(echo "${installation_list_response}" | jq '.[] | select(.app_id=='"$(get_app_id)"')' | jq -r '.id')
 
-	if [ -z "$installation_id" ]; then
-		echo >&2 "Unable to obtain installation ID: $installation_list_response"
+	if [ -z "${installation_id}" ]; then
+		echo >&2 "Unable to obtain installation ID: ${installation_list_response}"
 		return
 	fi
 
@@ -58,14 +56,14 @@ function generate_app_access_token() {
 	installation_token_response=$(curl -s -X POST \
 		-H "Authorization: Bearer ${token}" \
 		-H "Accept: application/vnd.github.machine-man-preview+json" \
-		https://api.github.com/app/installations/$installation_id/access_tokens)
+		https://api.github.com/app/installations/"${installation_id}"/access_tokens)
 
-	installation_token=$(echo $installation_token_response | jq -r '.token')
+	installation_token=$(echo "${installation_token_response}" | jq -r '.token')
 
-	if [ -z "$installation_token" ]; then
-		echo >&2 "Unable to obtain installation token: $installation_token_response"
+	if [ -z "${installation_token}" ]; then
+		echo >&2 "Unable to obtain installation token: ${installation_token_response}"
 		return
 	fi
 
-	echo $installation_token
+	echo "${installation_token}"
 }
