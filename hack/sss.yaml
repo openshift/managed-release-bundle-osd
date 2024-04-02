@@ -38,5 +38,5 @@ objects:
           metadata:
             name: managed-openshift-release-bundle
           spec:
-            image: ${IMAGE_NAME}@${IMAGE_TAG}
+            image: ${IMAGE_NAME}:${IMAGE_TAG}
             config: {{toJson .config}}
