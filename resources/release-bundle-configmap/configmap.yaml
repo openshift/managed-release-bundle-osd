@@ -6,4 +6,4 @@ metadata:
   annotations:
     package-operator.run/phase: release-bundle-configmap
 data:
-  installed: true
+  installed: "true"
