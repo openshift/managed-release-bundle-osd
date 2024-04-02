@@ -3,5 +3,7 @@ kind: ConfigMap
 metadata:
   name: release-bundle
   namespace: openshift-config
+  annotations:
+    package-operator.run/phase: release-bundle-configmap
 data:
   installed: true
