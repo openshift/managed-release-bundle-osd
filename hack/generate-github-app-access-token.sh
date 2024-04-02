@@ -31,7 +31,6 @@ function json() { jq -c . | LC_CTYPE=C tr -d '\n'; }
 function rs256_sign() { openssl dgst -binary -sha256 -sign <(printf '%s\n' "$1"); }
 
 function sign() {
-	local payload sig
 	payload=$(build_payload) || return
 	signed_content="$(json <<<"$header" | b64enc).$(json <<<"$payload" | b64enc)"
 	sig=$(printf %s "$signed_content" | rs256_sign "$private_key" | b64enc)
