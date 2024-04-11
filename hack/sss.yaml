@@ -22,6 +22,7 @@ objects:
           values:
             - '4.16'
     resourceApplyMode: Sync
+    enableResourceTemplates: true
     resources:
     - apiVersion: v1
       kind: ConfigMap
