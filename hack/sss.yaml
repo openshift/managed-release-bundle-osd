@@ -5,6 +5,8 @@ parameters:
   required: true
 - name: IMAGE_NAME
   value: quay.io/app-sre/managed-release-bundle
+- name: OPENSHIFT_MAJOR_MINOR_VERSION
+  value: "4.16"
 metadata:
   name: selectorsyncset-template
 objects:
@@ -20,7 +22,7 @@ objects:
         - key: hive.openshift.io/version-major-minor
           operator: In
           values:
-            - '4.16'
+            - "${OPENSHIFT_MAJOR_MINOR_VERSION}"
     resourceApplyMode: Sync
     enableResourceTemplates: true
     resources:
@@ -55,5 +57,5 @@ objects:
           metadata:
             name: managed-openshift-release-bundle
           spec:
-            image: ${IMAGE_NAME}:${IMAGE_TAG}
+            image: ${IMAGE_NAME}:${OPENSHIFT_MAJOR_MINOR_VERSION}-${IMAGE_TAG}
             config: {{toJson .config}}
