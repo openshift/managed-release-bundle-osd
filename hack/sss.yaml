@@ -58,4 +58,4 @@ objects:
             name: managed-openshift-release-bundle
           spec:
             image: ${IMAGE_NAME}:${OPENSHIFT_MAJOR_MINOR_VERSION}-${IMAGE_TAG}
-            config: {{toJson .config}}
+            config: {{`{{toJson .config}}`}}
