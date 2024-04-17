@@ -13,7 +13,7 @@ objects:
 - apiVersion: hive.openshift.io/v1
   kind: SelectorSyncSet
   metadata:
-    name: rvmo-sss
+    name: managed-release-bundle
   spec:
     clusterDeploymentSelector:
       matchLabels:
