@@ -12,7 +12,7 @@ objects:
       spec:
         containers:
         - name: test
-          image: ubi8/ubi-minimal:latest
+          image: quay.io/app-sre/ubi8-ubi-minimal:latest
           command: ["sh", "-c", "exit 0"]
           securityContext:
             runAsNonRoot: true
