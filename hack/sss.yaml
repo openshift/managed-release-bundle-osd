@@ -55,7 +55,7 @@ objects:
     - apiVersion: package-operator.run/v1alpha1
       kind: ClusterObjectTemplate
       metadata:
-        name: managed-openshift-release-bundle-template
+        name: managed-release-bundle-template
       spec:
         sources:
         - apiVersion: v1
@@ -70,7 +70,7 @@ objects:
           apiVersion: package-operator.run/v1alpha1
           kind: ClusterPackage
           metadata:
-            name: managed-openshift-release-bundle
+            name: managed-release-bundle
           spec:
             image: ${IMAGE_NAME}:${OPENSHIFT_MAJOR_MINOR_VERSION}-${IMAGE_TAG}
             config: {{toJson .config}}
