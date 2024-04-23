@@ -13,7 +13,7 @@ objects:
 - apiVersion: hive.openshift.io/v1
   kind: SelectorSyncSet
   metadata:
-    name: managed-release-bundle-config-${OPENSHIFT_MAJOR_MINOR_VERSION}
+    name: release-bundle-config-${OPENSHIFT_MAJOR_MINOR_VERSION}
   spec:
     clusterDeploymentSelector:
       matchLabels:
@@ -40,7 +40,7 @@ objects:
 - apiVersion: hive.openshift.io/v1
   kind: SelectorSyncSet
   metadata:
-    name: managed-release-bundle-${OPENSHIFT_MAJOR_MINOR_VERSION}
+    name: release-bundle-${OPENSHIFT_MAJOR_MINOR_VERSION}
   spec:
     clusterDeploymentSelector:
       matchLabels:
