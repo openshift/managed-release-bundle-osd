@@ -13,7 +13,7 @@ objects:
 - apiVersion: hive.openshift.io/v1
   kind: SelectorSyncSet
   metadata:
-    name: managed-release-bundle-${OPENSHIFT_MAJOR_MINOR_VERSION}
+    name: managed-release-bundle-config-${OPENSHIFT_MAJOR_MINOR_VERSION}
   spec:
     clusterDeploymentSelector:
       matchLabels:
@@ -37,6 +37,21 @@ objects:
         api.openshift.com_environment: "{{ fromCDLabel \"api.openshift.com/environment\" }}"
         hive.openshift.io_cluster-platform: "{{ fromCDLabel \"hive.openshift.io/cluster-platform\" }}"
         hive.openshift.io_cluster-region: "{{ fromCDLabel \"hive.openshift.io/cluster-region\" }}"
+- apiVersion: hive.openshift.io/v1
+  kind: SelectorSyncSet
+  metadata:
+    name: managed-release-bundle-${OPENSHIFT_MAJOR_MINOR_VERSION}
+  spec:
+    clusterDeploymentSelector:
+      matchLabels:
+        api.openshift.com/managed: 'true'
+      matchExpressions:
+        - key: hive.openshift.io/version-major-minor
+          operator: In
+          values:
+            - "${OPENSHIFT_MAJOR_MINOR_VERSION}"
+    resourceApplyMode: Sync
+    resources:
     - apiVersion: package-operator.run/v1alpha1
       kind: ClusterObjectTemplate
       metadata:
@@ -58,4 +73,4 @@ objects:
             name: managed-openshift-release-bundle
           spec:
             image: ${IMAGE_NAME}:${OPENSHIFT_MAJOR_MINOR_VERSION}-${IMAGE_TAG}
-            config: {{`{{toJson .config}}`}}
+            config: {{toJson .config}}
