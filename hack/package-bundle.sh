@@ -2,7 +2,7 @@
 
 set -e
 
-_KUBECTL_PACAKGE_VERSION=v1.10.0
+_KUBECTL_PACAKGE_VERSION=v1.11.0
 KUBECTL_PACKAGE=kubectl-package
 if ! command -v ${KUBECTL_PACKAGE} &>/dev/null; then
 	curl -o kubectl-package \
