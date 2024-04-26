@@ -85,7 +85,7 @@ cp "${TEMPLATE_FILE}" "${_OUTDIR}/resources.yaml"
 # add new operator phase if it doesn't exist
 if ! grep -q "${OPERATOR_NAME}" resources/manifest.yaml; then
 	_CONTENTS=$(${YQ} ".spec.phases += {\"name\": \"${OPERATOR_NAME}\"}" - < resources/manifest.yaml)
-	echo "${_CONTENTS}" >> resources/manifest.yaml
+	echo "${_CONTENTS}" > resources/manifest.yaml
 fi
 
 git add "${_OUTDIR}" resources/manifest.yaml
