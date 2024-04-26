@@ -32,17 +32,17 @@ objects:
         name: osd-cluster-metadata
         namespace: openshift-config
       data:
-        api.openshift.com_name: "{{ fromCDLabel \"api.openshift.com/name\" }}"
-        api.openshift.com_product: "{{ fromCDLabel \"api.openshift.com/product\" }}"
-        api.openshift.com_fedramp: "{{ fromCDLabel \"api.openshift.com/fedramp\" }}"
-        api.openshift.com_sts: "{{ fromCDLabel \"api.openshift.com/sts\" }}"
-        api.openshift.com_limited-support: "{{ fromCDLabel \"api.openshift.com/limited-support\" }}"
-        api.openshift.com_private-link: "{{ fromCDLabel \"api.openshift.com/private-link\" }}"
-        api.openshift.com_ccs: "{{ fromCDLabel \"api.openshift.com/ccs\" }}"
-        api.openshift.com_channel-group: "{{ fromCDLabel \"api.openshift.com/channel-group\" }}"
-        api.openshift.com_environment: "{{ fromCDLabel \"api.openshift.com/environment\" }}"
-        hive.openshift.io_cluster-platform: "{{ fromCDLabel \"hive.openshift.io/cluster-platform\" }}"
-        hive.openshift.io_cluster-region: "{{ fromCDLabel \"hive.openshift.io/cluster-region\" }}"
+        api_openshift_com_name: "{{ fromCDLabel \"api.openshift.com/name\" }}"
+        api_openshift_com_product: "{{ fromCDLabel \"api.openshift.com/product\" }}"
+        api_openshift_com_fedramp: "{{ fromCDLabel \"api.openshift.com/fedramp\" }}"
+        api_openshift_com_sts: "{{ fromCDLabel \"api.openshift.com/sts\" }}"
+        api_openshift_com_limited-support: "{{ fromCDLabel \"api.openshift.com/limited-support\" }}"
+        api_openshift_com_private-link: "{{ fromCDLabel \"api.openshift.com/private-link\" }}"
+        api_openshift_com_ccs: "{{ fromCDLabel \"api.openshift.com/ccs\" }}"
+        api_openshift_com_channel-group: "{{ fromCDLabel \"api.openshift.com/channel-group\" }}"
+        api_openshift_com_environment: "{{ fromCDLabel \"api.openshift.com/environment\" }}"
+        hive_openshift_io_cluster-platform: "{{ fromCDLabel \"hive.openshift.io/cluster-platform\" }}"
+        hive_openshift_io_cluster-region: "{{ fromCDLabel \"hive.openshift.io/cluster-region\" }}"
 - apiVersion: hive.openshift.io/v1
   kind: SelectorSyncSet
   metadata:
