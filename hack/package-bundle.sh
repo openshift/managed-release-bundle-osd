@@ -23,7 +23,7 @@ _BRANCH=$(git branch --remote --contains HEAD | cut -d / -f 2)
 _COMMIT=$(git rev-parse --short HEAD)
 # TODO: write $_BUILD_NUMBER out to file
 #_BUILD_NUMBER=$(git rev-list --count HEAD)
-_BUNDLE_IMAGE_NAME=${_BUNDLE_REGISTRY}:${_BRANCH/#release-/}-${_COMMIT}
+_BUNDLE_IMAGE_NAME=${_BUNDLE_REGISTRY}:osd-${_BRANCH/#release-/}-${_COMMIT}
 
 echo "Building and pushing package ${_BUNDLE_IMAGE_NAME} ..."
 ${KUBECTL_PACKAGE} build --push --tag "${_BUNDLE_IMAGE_NAME}" ./resources
