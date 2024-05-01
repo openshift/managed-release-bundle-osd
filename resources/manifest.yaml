@@ -1,0 +1,15 @@
+apiVersion: manifests.package-operator.run/v1alpha1
+kind: PackageManifest
+metadata:
+  name: managed-openshift-release-bundle
+spec:
+  scopes:
+  - Namespaced
+  - Cluster
+  phases:
+  - name: release-bundle-configmap
+  config:
+    openAPIV3Schema:
+      description: Injected from osd-cluster-metadata ConfigMap.
+      type: object
+      x-kubernetes-preserve-unknown-fields: true
