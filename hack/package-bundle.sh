@@ -19,7 +19,7 @@ fi
 
 _BUNDLE_REGISTRY="${BUNDLE_REGISTRY:-quay.io/app-sre/managed-release-bundle}"
 
-_BRANCH=$(git branch --remote --contains HEAD | cut -d / -f 2)
+_BRANCH=$(git branch --remote --contains HEAD --format "%(refname:strip=-1)")
 _COMMIT=$(git rev-parse --short HEAD)
 # TODO: write $_BUILD_NUMBER out to file
 #_BUILD_NUMBER=$(git rev-list --count HEAD)
