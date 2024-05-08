@@ -2,6 +2,9 @@ apiVersion: template.openshift.io/v1
 kind: Template
 metadata:
   name: managed-release-bundle-gate-job-template
+parameters:
+- name: JOB_NAME
+  value: "none"
 objects:
 - apiVersion: batch/v1
   kind: Job
@@ -11,7 +14,7 @@ objects:
     template:
       spec:
         containers:
-        - name: test
+        - name: test-${JOB_NAME}
           image: quay.io/app-sre/ubi8-ubi-minimal:latest
           command: ["sh", "-c", "exit 0"]
           securityContext:
