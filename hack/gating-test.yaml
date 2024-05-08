@@ -9,7 +9,7 @@ objects:
 - apiVersion: batch/v1
   kind: Job
   metadata:
-    name: managed-release-bundle-gate
+    name: managed-release-bundle-gate-${JOB_NAME}
   spec:
     template:
       spec:
