@@ -56,10 +56,10 @@ if [[ ${JENKINS_URL} ]]; then
 	git config --local user.email "${github_email}"
 
 	# force override appinterface pipeline settings
-	GIT_AUTHOR_NAME="${github_username}[bot]"
-	GIT_AUTHOR_EMAIL="${github_email}"
-	GIT_COMMITTER_NAME="${github_username}[bot]"
-	GIT_COMMITTER_EMAIL="${github_email}"
+	export GIT_AUTHOR_NAME="${github_username}[bot]"
+	export GIT_AUTHOR_EMAIL="${github_email}"
+	export GIT_COMMITTER_NAME="${github_username}[bot]"
+	export GIT_COMMITTER_EMAIL="${github_email}"
 fi
 
 _OUTDIR=resources/${OPERATOR_NAME}
