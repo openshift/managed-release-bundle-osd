@@ -2,11 +2,15 @@ apiVersion: template.openshift.io/v1
 kind: Template
 metadata:
   name: managed-release-bundle-gate-job-template
+parameters:
+- name: JOBID
+  generate: expression
+  from: "[0-9a-z]{7}"
 objects:
 - apiVersion: batch/v1
   kind: Job
   metadata:
-    name: managed-release-bundle-gate
+    name: managed-release-bundle-gate-${JOBID}
   spec:
     template:
       spec:
