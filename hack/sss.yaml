@@ -23,6 +23,13 @@ objects:
           operator: In
           values:
             - "${OPENSHIFT_MAJOR_MINOR_VERSION}"
+            - "4.11"
+            - "4.10"
+            - "4.9"
+            - "4.8"
+            - "4.7"
+            - "4.6"
+            - "4.5"
     resourceApplyMode: Sync
     enableResourceTemplates: true
     resources:
@@ -56,6 +63,13 @@ objects:
           operator: In
           values:
             - "${OPENSHIFT_MAJOR_MINOR_VERSION}"
+            - "4.11"
+            - "4.10"
+            - "4.9"
+            - "4.8"
+            - "4.7"
+            - "4.6"
+            - "4.5"
     resourceApplyMode: Sync
     resources:
     - apiVersion: package-operator.run/v1alpha1
