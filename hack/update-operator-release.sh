@@ -66,13 +66,17 @@ _OUTDIR=resources/${OPERATOR_NAME}
 rm -rf "${_OUTDIR}" && mkdir -p "${_OUTDIR}"
 
 # TODO: determine this
-_OPERATOR_OLM_CHANNEL=staging
+_OPERATOR_OLM_CHANNEL=stable
 _OPERATOR_OLM_REGISTRY_IMAGE_TAG="${_OPERATOR_OLM_CHANNEL}-latest"
 
 # look up the digest for the new registry image
 _OPERATOR_OLM_REGISTRY_IMAGE_DIGEST=$(${SKOPEO} inspect --format '{{.Digest}}' \
 	docker://"${OPERATOR_OLM_REGISTRY_IMAGE}":"${_OPERATOR_OLM_REGISTRY_IMAGE_TAG}" |
 	tr -d "\r")
+
+CURRENT_BRANCH=$(git rev-parse --abbrev-ref HEAD)
+TMP_BRANCH="${OPERATOR_NAME}-${OPERATOR_VERSION}"
+git checkout -b "${TMP_BRANCH}"
 
 log "Processing template with parameters..."
 sed -i "s#\${NAMESPACE}#${OPERATOR_NAME}#" "${TEMPLATE_FILE}"
@@ -95,4 +99,10 @@ fi
 
 log "Committing changes..."
 git commit --quiet --message "${OPERATOR_NAME}: ${OPERATOR_VERSION}"
-git push
+git push -u origin HEAD
+
+curl -X POST -H "Authorization: Bearer ${github_token}" \
+	-H "Accept: application/vnd.github+json" \
+	-H "X-GitHub-Api-Version: 2022-11-28" \
+	--data-raw '{"base":"'"${CURRENT_BRANCH}"'","head":"'"${TMP_BRANCH}"'","title":"'"${OPERATOR_NAME}"':'"${OPERATOR_VERSION}"'"}' \
+	https://api.github.com/repos/openshift/managed-release-bundle-osd/pulls
