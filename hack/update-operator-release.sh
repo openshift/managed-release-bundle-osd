@@ -67,7 +67,7 @@ rm -rf "${_OUTDIR}" && mkdir -p "${_OUTDIR}"
 
 # look up the digest for the new registry image
 _OPERATOR_OLM_REGISTRY_IMAGE_DIGEST=$(${SKOPEO} inspect --format '{{.Digest}}' \
-	docker://"${OPERATOR_OLM_REGISTRY_IMAGE}":"${OPERATOR_VERSION}" |
+	docker://"${OPERATOR_OLM_REGISTRY_IMAGE}":v"${OPERATOR_VERSION}" |
 	tr -d "\r")
 
 CURRENT_BRANCH=$(git rev-parse --abbrev-ref HEAD)
