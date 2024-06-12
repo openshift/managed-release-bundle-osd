@@ -100,5 +100,5 @@ git push -u origin HEAD
 curl -X POST -H "Authorization: Bearer ${github_token}" \
 	-H "Accept: application/vnd.github+json" \
 	-H "X-GitHub-Api-Version: 2022-11-28" \
-	--data-raw '{"base":"'"${CURRENT_BRANCH}"'","head":"'"${TMP_BRANCH}"'","title":"'"${OPERATOR_NAME}"':'"${OPERATOR_VERSION}"'"}' \
+	--data '{"base":"'"${CURRENT_BRANCH}"'","head":"'"${TMP_BRANCH}"'","title":"'"${OPERATOR_NAME}"':'"${OPERATOR_VERSION}"'"}' \
 	https://api.github.com/repos/openshift/managed-release-bundle-osd/pulls
