@@ -71,7 +71,7 @@ _OPERATOR_OLM_REGISTRY_IMAGE_DIGEST=$(${SKOPEO} inspect --format '{{.Digest}}' \
 	tr -d "\r")
 
 CURRENT_BRANCH=$(git rev-parse --abbrev-ref HEAD)
-TMP_BRANCH="${OPERATOR_NAME}-${OPERATOR_VERSION}"
+TMP_BRANCH="z-bump-${OPERATOR_NAME}-${OPERATOR_VERSION}"
 git checkout -b "${TMP_BRANCH}"
 
 log "Processing template with parameters..."
