@@ -1,6 +1,5 @@
-# DO NOT EDIT: this file is generated!
-# NAMESPACE, REPO_NAME, REGISTRY_IMG, IMAGE_DIGEST, CHANNEL
-{{ if eq .api.openshift.com_name "rvmo-demo2" }}
+# NAMESPACE, REPO_NAME, REGISTRY_IMG, IMAGE_DIGEST, CHANNEL 
+{{ if eq .config.cluster_metadata.api_openshift_com_name "rvmo-demo2" }}
 apiVersion: v1
 kind: Namespace
 metadata:
@@ -37,7 +36,7 @@ spec:
   icon:
     base64data: ''
     mediatype: ''
-  image: quay.io/app-sre/osd-example-operator-registry@sha256:7099369a5b921560551e83817e3dacb140be3f23e34a31a0cca76860539af81c
+  image: quay.io/app-sre/osd-example-operator-registry@sha256:1fdfdc64cf8decb8996e62d022ff3ce75fffa8a3c78096ed6cc8f8beef94270c
   publisher: Red Hat
   sourceType: grpc
   grpcPodConfig:
