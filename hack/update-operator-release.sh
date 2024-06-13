@@ -97,7 +97,8 @@ log "Committing changes..."
 git commit --quiet --message "${OPERATOR_NAME}: ${OPERATOR_VERSION}"
 git push --force -u origin HEAD
 
-curl -X POST --fail-with-body \
+# This needs --fail-with-body for proper error reporting
+curl -X POST \
 	-H "Authorization: Bearer ${github_token}" \
 	-H "Accept: application/vnd.github+json" \
 	-H "X-GitHub-Api-Version: 2022-11-28" \
