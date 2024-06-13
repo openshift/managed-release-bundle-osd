@@ -95,7 +95,7 @@ fi
 
 log "Committing changes..."
 git commit --quiet --message "${OPERATOR_NAME}: ${OPERATOR_VERSION}"
-git push -u origin HEAD
+git push --force -u origin HEAD
 
 curl -X POST --fail-with-body \
 	-H "Authorization: Bearer ${github_token}" \
