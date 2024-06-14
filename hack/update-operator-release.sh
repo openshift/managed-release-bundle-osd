@@ -80,7 +80,7 @@ sed -i "s#\${REPO_NAME}#${OPERATOR_NAME}#" "${TEMPLATE_FILE}"
 sed -i "s#\${REGISTRY_IMG}#${OPERATOR_OLM_REGISTRY_IMAGE}#" "${TEMPLATE_FILE}"
 sed -i "s#\${IMAGE_DIGEST}#${_OPERATOR_OLM_REGISTRY_IMAGE_DIGEST}#" "${TEMPLATE_FILE}"
 sed -i "s#\${CHANNEL}#stable#" "${TEMPLATE_FILE}"
-cp "${TEMPLATE_FILE}" "${_OUTDIR}/resources.yaml"
+cp "${TEMPLATE_FILE}" "${_OUTDIR}/resources.yaml.gotmpl"
 
 # add new operator phase if it doesn't exist
 if ! grep -q "${OPERATOR_NAME}" resources/manifest.yaml; then

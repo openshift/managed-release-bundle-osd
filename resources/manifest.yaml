@@ -7,6 +7,7 @@ spec:
     - Namespaced
     - Cluster
   phases:
+    - name: namespaces
     - name: release-bundle-configmap
     - name: osd-example-operator
   config:
