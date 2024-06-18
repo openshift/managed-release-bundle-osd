@@ -4,12 +4,10 @@ metadata:
   name: managed-openshift-release-bundle
 spec:
   scopes:
-    - Namespaced
-    - Cluster
+  - Namespaced
+  - Cluster
   phases:
-    - name: namespaces
-    - name: release-bundle-configmap
-    - name: osd-example-operator
+  - name: release-bundle-configmap
   config:
     openAPIV3Schema:
       description: Injected from osd-cluster-metadata ConfigMap.
