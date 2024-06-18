@@ -6,6 +6,8 @@ parameters:
 - name: JOBID
   generate: expression
   from: "[0-9a-z]{7}"
+- name: JOB_NAME
+  value: "none"
 objects:
 - apiVersion: batch/v1
   kind: Job
@@ -15,7 +17,7 @@ objects:
     template:
       spec:
         containers:
-        - name: test
+        - name: test-${JOB_NAME}
           image: quay.io/app-sre/ubi8-ubi-minimal:latest
           command: ["sh", "-c", "exit 0"]
           securityContext:
