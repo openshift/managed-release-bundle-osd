@@ -21,7 +21,7 @@ _BUNDLE_REGISTRY="${BUNDLE_REGISTRY:-quay.io/app-sre/managed-release-bundle}"
 
 _BRANCH=$(git branch --remote --contains HEAD --format "%(refname:strip=-1)")
 _COMMIT=$(git rev-parse --short HEAD)
-# TODO: write $_BUILD_NUMBER out to file
+# TODO: write $_BUILD_NUMBER out
 #_BUILD_NUMBER=$(git rev-list --count HEAD)
 _BUNDLE_IMAGE_NAME=${_BUNDLE_REGISTRY}:osd-${_BRANCH/#release-/}-${_COMMIT}
 
