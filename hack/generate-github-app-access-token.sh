@@ -44,9 +44,9 @@ function generate_app_access_token() {
 		-H "Accept: application/vnd.github.machine-man-preview+json" \
 		https://api.github.com/app/installations)
 
-	installation_id=$(echo "${installation_list_response}" | jq '.[] | select(.app_id=='"$(get_app_id)"')' | jq -r '.id')
+	access_tokens_url=$(echo "${installation_list_response}" | jq '.[] | select(.app_id=='"$(get_app_id)"')' | jq -r '.access_tokens_url')
 
-	if [ -z "${installation_id}" ]; then
+	if [ -z "${access_tokens_url}" ]; then
 		echo >&2 "Unable to obtain installation ID: ${installation_list_response}"
 		return
 	fi
@@ -55,7 +55,7 @@ function generate_app_access_token() {
 	installation_token_response=$(curl -s -X POST \
 		-H "Authorization: Bearer ${token}" \
 		-H "Accept: application/vnd.github.machine-man-preview+json" \
-		https://api.github.com/app/installations/"${installation_id}"/access_tokens)
+		"${access_tokens_url}")
 
 	installation_token=$(echo "${installation_token_response}" | jq -r '.token')
 
