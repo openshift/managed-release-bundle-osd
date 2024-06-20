@@ -6,7 +6,7 @@ parameters:
 - name: IMAGE_NAME
   value: quay.io/app-sre/managed-release-bundle
 - name: OPENSHIFT_MAJOR_MINOR_VERSION
-  value: "4.13"
+  required: true
 metadata:
   name: selectorsyncset-template
 objects:
