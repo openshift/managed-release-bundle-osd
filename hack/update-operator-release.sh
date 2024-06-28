@@ -97,7 +97,20 @@ log "Committing changes..."
 git commit --quiet --message "${OPERATOR_NAME}: ${OPERATOR_VERSION}"
 git push --force -u origin HEAD
 
-curl -X POST --fail-with-body \
+
+# This wouldn't be needed if we had a curl recent enough to support --fail-with-body
+curlf() {
+  _OUTPUT_FILE=$(mktemp)
+  HTTP_CODE=$(curl --silent --output $_OUTPUT_FILE --write-out "%{http_code}" "$@")
+  echo "Return Code: $HTTP_CODE"
+  cat $_OUTPUT_FILE
+  rm $_OUTPUT_FILE
+  if [[ ${HTTP_CODE} -lt 200 || ${HTTP_CODE} -gt 299 ]] ; then
+    return 22
+  fi
+}
+
+curlf -X POST \
 	-H "Authorization: Bearer ${github_token}" \
 	-H "Accept: application/vnd.github+json" \
 	-H "X-GitHub-Api-Version: 2022-11-28" \
