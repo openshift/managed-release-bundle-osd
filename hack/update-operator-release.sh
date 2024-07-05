@@ -13,7 +13,12 @@ function fatal() {
 # If not explicitly provided, safe bet it's same as OPERATOR_NAME
 REPO_NAME=${REPO_NAME:-$OPERATOR_NAME}
 
-for var in TEMPLATE_FILE \
+# For now let's support only a single file. It'll be simple to change though,
+# just drop TEMPLATE_FILE and parse all files in TEMPLATE_DIR.
+TEMPLATE_FILE=${TEMPLATE_FILE:-$TEMPLATE_DIR/resources.yaml.gotmpl}
+
+for var in TEMPLATE_DIR \
+	TEMPLATE_FILE \
 	REPO_NAME \
 	OPERATOR_NAME \
 	OPERATOR_VERSION \
