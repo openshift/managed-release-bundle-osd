@@ -88,9 +88,14 @@ sed -i "s#\${CHANNEL}#stable#" "${TEMPLATE_FILE}"
 cp "${TEMPLATE_FILE}" "${_OUTDIR}/resources.yaml.gotmpl"
 
 # add new operator phase if it doesn't exist
-if ! grep -q "${OPERATOR_NAME}" resources/manifest.yaml; then
+if ! grep -q "name: ${OPERATOR_NAME}" resources/manifest.yaml; then
 	_CONTENTS=$(${YQ} ".spec.phases += {\"name\": \"${OPERATOR_NAME}\"}" - < resources/manifest.yaml)
 	echo "${_CONTENTS}" > resources/manifest.yaml
+	# Check for namespaces, prepend if missing
+	if ! grep -q "name: namespaces" resources/manifest.yaml; then
+		_CONTENTS=$(${YQ} '.spec.phases = [{"name": "namespaces"}] + .spec.phases' - < resources/manifest.yaml)
+		echo "${_CONTENTS}" > resources/manifest.yaml
+	fi
 fi
 
 git add "${_OUTDIR}" resources/manifest.yaml
