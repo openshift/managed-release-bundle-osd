@@ -10,7 +10,11 @@ function fatal() {
 	log "fatal: ${1}" && exit 1
 }
 
+# If not explicitly provided, safe bet it's same as OPERATOR_NAME
+REPO_NAME=${REPO_NAME:-$OPERATOR_NAME}
+
 for var in TEMPLATE_FILE \
+	REPO_NAME \
 	OPERATOR_NAME \
 	OPERATOR_VERSION \
 	OPERATOR_OLM_REGISTRY_IMAGE; do
@@ -75,8 +79,9 @@ TMP_BRANCH="z-bump-${OPERATOR_NAME}-${OPERATOR_VERSION}"
 git checkout -b "${TMP_BRANCH}"
 
 log "Processing template with parameters..."
-sed -i "s#\${NAMESPACE}#${OPERATOR_NAME}#" "${TEMPLATE_FILE}"
-sed -i "s#\${REPO_NAME}#${OPERATOR_NAME}#" "${TEMPLATE_FILE}"
+sed -i "s#\${REPO_NAME}#${REPO_NAME}#" "${TEMPLATE_FILE}"
+sed -i "s#\${OPERATOR_NAME}#${OPERATOR_NAME}#" "${TEMPLATE_FILE}"
+sed -i "s#\${OPERATOR_VERSION}#${OPERATOR_VERSION}#" "${TEMPLATE_FILE}"
 sed -i "s#\${REGISTRY_IMG}#${OPERATOR_OLM_REGISTRY_IMAGE}#" "${TEMPLATE_FILE}"
 sed -i "s#\${IMAGE_DIGEST}#${_OPERATOR_OLM_REGISTRY_IMAGE_DIGEST}#" "${TEMPLATE_FILE}"
 sed -i "s#\${CHANNEL}#stable#" "${TEMPLATE_FILE}"
