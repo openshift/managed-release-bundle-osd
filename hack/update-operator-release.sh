@@ -10,7 +10,11 @@ function fatal() {
 	log "fatal: ${1}" && exit 1
 }
 
+# If not explicitly provided, safe bet it's same as OPERATOR_NAME
+REPO_NAME=${REPO_NAME:-$OPERATOR_NAME}
+
 for var in TEMPLATE_FILE \
+	REPO_NAME \
 	OPERATOR_NAME \
 	OPERATOR_VERSION \
 	OPERATOR_OLM_REGISTRY_IMAGE; do
@@ -75,17 +79,23 @@ TMP_BRANCH="z-bump-${OPERATOR_NAME}-${OPERATOR_VERSION}"
 git checkout -b "${TMP_BRANCH}"
 
 log "Processing template with parameters..."
-sed -i "s#\${NAMESPACE}#${OPERATOR_NAME}#" "${TEMPLATE_FILE}"
-sed -i "s#\${REPO_NAME}#${OPERATOR_NAME}#" "${TEMPLATE_FILE}"
+sed -i "s#\${REPO_NAME}#${REPO_NAME}#" "${TEMPLATE_FILE}"
+sed -i "s#\${OPERATOR_NAME}#${OPERATOR_NAME}#" "${TEMPLATE_FILE}"
+sed -i "s#\${OPERATOR_VERSION}#${OPERATOR_VERSION}#" "${TEMPLATE_FILE}"
 sed -i "s#\${REGISTRY_IMG}#${OPERATOR_OLM_REGISTRY_IMAGE}#" "${TEMPLATE_FILE}"
 sed -i "s#\${IMAGE_DIGEST}#${_OPERATOR_OLM_REGISTRY_IMAGE_DIGEST}#" "${TEMPLATE_FILE}"
 sed -i "s#\${CHANNEL}#stable#" "${TEMPLATE_FILE}"
 cp "${TEMPLATE_FILE}" "${_OUTDIR}/resources.yaml.gotmpl"
 
 # add new operator phase if it doesn't exist
-if ! grep -q "${OPERATOR_NAME}" resources/manifest.yaml; then
+if ! grep -q "name: ${OPERATOR_NAME}" resources/manifest.yaml; then
 	_CONTENTS=$(${YQ} ".spec.phases += {\"name\": \"${OPERATOR_NAME}\"}" - < resources/manifest.yaml)
 	echo "${_CONTENTS}" > resources/manifest.yaml
+	# Check for namespaces, prepend if missing
+	if ! grep -q "name: namespaces" resources/manifest.yaml; then
+		_CONTENTS=$(${YQ} '.spec.phases = [{"name": "namespaces"}] + .spec.phases' - < resources/manifest.yaml)
+		echo "${_CONTENTS}" > resources/manifest.yaml
+	fi
 fi
 
 git add "${_OUTDIR}" resources/manifest.yaml
