@@ -1,0 +1,62 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: openshift-must-gather-operator
+  annotations:
+    package-operator.run/phase: namespaces
+    openshift.io/node-selector: ""
+  labels:
+    openshift.io/cluster-logging: "true"
+    openshift.io/cluster-monitoring: 'true'
+---
+apiVersion: operators.coreos.com/v1alpha1
+kind: CatalogSource
+metadata:
+  name: must-gather-operator-registry
+  namespace: openshift-must-gather-operator
+  annotations:
+    package-operator.run/phase: must-gather-operator
+  labels:
+    opsrc-datastore: "true"
+    opsrc-provider: redhat
+spec:
+  image: quay.io/app-sre/must-gather-operator-registry@sha256:92ccb618fb61841ff6c47a01a378fa07b159e19e2b21558a6cd19c86b0f1913d
+  displayName: must-gather-operator
+  icon:
+    base64data: ''
+    mediatype: ''
+  publisher: Red Hat
+  sourceType: grpc
+  grpcPodConfig:
+    securityContextConfig: restricted
+    nodeSelector:
+      node-role.kubernetes.io: infra
+    tolerations:
+    - effect: NoSchedule
+      key: node-role.kubernetes.io/infra
+      operator: Exists
+---
+apiVersion: operators.coreos.com/v1alpha1
+kind: Subscription
+metadata:
+  name: must-gather-operator
+  namespace: openshift-must-gather-operator
+  annotations:
+    package-operator.run/phase: must-gather-operator
+spec:
+  channel: stable
+  name: must-gather-operator
+  source: must-gather-operator-registry
+  sourceNamespace: openshift-must-gather-operator
+---
+apiVersion: operators.coreos.com/v1alpha2
+kind: OperatorGroup
+metadata:
+  name: must-gather-operator
+  namespace: openshift-must-gather-operator
+  annotations:
+    package-operator.run/phase: must-gather-operator
+    olm.operatorframework.io/exclude-global-namespace-resolution: 'true'
+spec:
+  targetNamespaces:
+  - openshift-must-gather-operator
