@@ -1,46 +1,40 @@
 apiVersion: v1
 kind: Namespace
 metadata:
+  name: openshift-must-gather-operator
   annotations:
-    package-operator.run/collision-protection: None
     package-operator.run/phase: namespaces
     openshift.io/node-selector: ""
   labels:
     openshift.io/cluster-logging: "true"
-    openshift.io/cluster-monitoring: "true"
-  name: openshift-must-gather-operator
+    openshift.io/cluster-monitoring: 'true'
 ---
 apiVersion: operators.coreos.com/v1alpha1
 kind: CatalogSource
 metadata:
+  name: must-gather-operator-registry
+  namespace: openshift-must-gather-operator
   annotations:
-    package-operator.run/collision-protection: None
     package-operator.run/phase: must-gather-operator
   labels:
     opsrc-datastore: "true"
     opsrc-provider: redhat
-  name: must-gather-operator-registry
-  namespace: openshift-must-gather-operator
 spec:
+  image: quay.io/app-sre/must-gather-operator-registry@sha256:f0d210add9e5c953ed393a897813b862b96536c1298ddd611ea67859ad4f74dc
   displayName: must-gather-operator
+  icon:
+    base64data: ''
+    mediatype: ''
+  publisher: Red Hat
+  sourceType: grpc
   grpcPodConfig:
+    securityContextConfig: restricted
     nodeSelector:
       node-role.kubernetes.io: infra
-    securityContextConfig: restricted
     tolerations:
     - effect: NoSchedule
       key: node-role.kubernetes.io/infra
       operator: Exists
-  icon:
-    base64data: ""
-    mediatype: ""
-{{ if eq .config.cluster_metadata.api_openshift_com_environment "production" }}
-  image: quay.io/app-sre/must-gather-operator-registry@sha256:39bc14036be9a40505e0facbbb71ec17546fc4c4063bdd78a2d10f02767c816a
-{{ else }}
-  image: quay.io/app-sre/must-gather-operator-registry@sha256:a443207d2f93aaaffe93d7eb0a1a257ff4bd6505456960bccf717f42b36153bb
-{{ end }}
-  publisher: Red Hat
-  sourceType: grpc
 ---
 apiVersion: operators.coreos.com/v1alpha1
 kind: Subscription
@@ -48,14 +42,9 @@ metadata:
   name: must-gather-operator
   namespace: openshift-must-gather-operator
   annotations:
-    package-operator.run/collision-protection: None
     package-operator.run/phase: must-gather-operator
 spec:
-{{ if eq .config.cluster_metadata.api_openshift_com_environment "production" }}
-  channel: production
-{{ else }}
-  channel: staging
-{{ end }}
+  channel: stable
   name: must-gather-operator
   source: must-gather-operator-registry
   sourceNamespace: openshift-must-gather-operator
@@ -63,12 +52,11 @@ spec:
 apiVersion: operators.coreos.com/v1alpha2
 kind: OperatorGroup
 metadata:
-  annotations:
-    package-operator.run/collision-protection: None
-    package-operator.run/phase: must-gather-operator
-    olm.operatorframework.io/exclude-global-namespace-resolution: "true"
   name: must-gather-operator
   namespace: openshift-must-gather-operator
+  annotations:
+    package-operator.run/phase: must-gather-operator
+    olm.operatorframework.io/exclude-global-namespace-resolution: 'true'
 spec:
   targetNamespaces:
   - openshift-must-gather-operator
