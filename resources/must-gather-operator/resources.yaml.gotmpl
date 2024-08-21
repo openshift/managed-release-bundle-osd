@@ -3,6 +3,7 @@ kind: Namespace
 metadata:
   name: openshift-must-gather-operator
   annotations:
+    package-operator.run/collision-protection: IfNoController
     package-operator.run/phase: namespaces
     openshift.io/node-selector: ""
   labels:
@@ -15,12 +16,13 @@ metadata:
   name: must-gather-operator-registry
   namespace: openshift-must-gather-operator
   annotations:
+    package-operator.run/collision-protection: IfNoController
     package-operator.run/phase: must-gather-operator
   labels:
     opsrc-datastore: "true"
     opsrc-provider: redhat
 spec:
-  image: quay.io/app-sre/must-gather-operator-registry@sha256:c7524fff260481486840e7ca51bd4ad0e4c86da8028f43f0934edd5f5a44a92c
+  image: quay.io/app-sre/must-gather-operator-registry@sha256:82c7c75c367a3b367af5b346c11f832aede075a43bdd571ea1ad3c8a8e4152a6
   displayName: must-gather-operator
   icon:
     base64data: ''
@@ -42,6 +44,7 @@ metadata:
   name: must-gather-operator
   namespace: openshift-must-gather-operator
   annotations:
+    package-operator.run/collision-protection: IfNoController
     package-operator.run/phase: must-gather-operator
 spec:
   channel: stable
@@ -55,6 +58,7 @@ metadata:
   name: must-gather-operator
   namespace: openshift-must-gather-operator
   annotations:
+    package-operator.run/collision-protection: IfNoController
     package-operator.run/phase: must-gather-operator
     olm.operatorframework.io/exclude-global-namespace-resolution: 'true'
 spec:
