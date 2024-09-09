@@ -1,6 +1,9 @@
 apiVersion: template.openshift.io/v1
 kind: Template
 parameters:
+- name: IMAGE_MAJOR_MINOR_VERSION
+  required: true
+  # ideally this should default to OPENSHIFT_MAJOR_MINOR_VERSION, but that's not supported
 - name: IMAGE_TAG
   required: true
 - name: IMAGE_NAME
@@ -78,5 +81,5 @@ objects:
           metadata:
             name: managed-release-bundle
           spec:
-            image: ${IMAGE_NAME}:osd-${OPENSHIFT_MAJOR_MINOR_VERSION}-${IMAGE_TAG}
+            image: ${IMAGE_NAME}:osd-${IMAGE_MAJOR_MINOR_VERSION}-${IMAGE_TAG}
             config: {{toJson .config}}
