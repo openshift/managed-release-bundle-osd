@@ -1,1 +1,1 @@
-# Release Versioning of Managed OpenShift Dedicated
+# Release Versioning for Managed OpenShift
