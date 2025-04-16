@@ -33,7 +33,7 @@ objects:
 - apiVersion: batch/v1
   kind: Job
   metadata:
-    name: mgo-e2e-${VERSION}-${IMAGE_TAG}-${JOBID}
+    name: mgo-e2e-${IMAGE_TAG}-${JOBID}
   spec:
     backoffLimit: 0
     template:
